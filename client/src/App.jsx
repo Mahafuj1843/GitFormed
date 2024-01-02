@@ -8,6 +8,9 @@ const MyRepoPage = lazy(() => import("./pages/MyRepoPage"));
 const WatchingRepoPage = lazy(() => import("./pages/WatchingRepoPage"));
 const CreateRepoPage = lazy(() => import("./pages/CreateRepoPage"));
 const SingleRepo = lazy(() => import("./pages/SingleRepoPage"));
+
+const PullReqListPage = lazy(() => import("./pages/PullReqListPage"));
+const CreatePullReqPage = lazy(() => import("./pages/CreatePullReqPage"));
 import { Toaster } from "react-hot-toast";
 import LazyLoader from "./components/LazyLoader";
 
@@ -77,6 +80,24 @@ function App() {
             element={
               <Suspense fallback={<LazyLoader />}>
                   <SingleRepo />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/repository/:id/pull"
+            element={
+              <Suspense fallback={<LazyLoader />}>
+                {/* <ProtectedRoute path="/createRepo"> */}
+                  <PullReqListPage />
+                {/* </ProtectedRoute> */}
+              </Suspense>
+            }
+          />
+          <Route
+            path="/repository/:id/createPullReq"
+            element={
+              <Suspense fallback={<LazyLoader />}>
+                  <CreatePullReqPage />
               </Suspense>
             }
           />
