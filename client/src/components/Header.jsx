@@ -34,9 +34,9 @@ const Header = () => {
                             {
                                 token ?
                                     <div className="absolute inset-y-0 right-0 flex items-center gap-1.5 md:gap-3 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                                        <button type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
+                                        <Link to="/createRepo" type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5  md:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="M12 5v14" /></svg>
-                                        </button>
+                                        </Link>
                                         <button type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5  md:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="5" cy="6" r="3" /><path d="M5 9v12" /><circle cx="19" cy="18" r="3" /><path d="m15 9-3-3 3-3" /><path d="M12 6h5a2 2 0 0 1 2 2v7" /></svg>
                                         </button>
