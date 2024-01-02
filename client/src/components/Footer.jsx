@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Footer = () => {
     return (
         <Fragment>
-            <div className='px-[1rem] md:px-[2rem] lg:px-[5rem] border-t py-6'>
+            <div className='px-[1rem] md:px-[2rem] lg:px-[5rem] mt-8 border-t py-6'>
                 <div className='flex flex-col lg:flex-row-reverse items-center justify-center gap-x-4 gap-y-2 text-sm text-gray-700'>
                     <div className='flex flex-wrap items-center justify-center gap-x-4 gap-y-2'>
                         <Link to="#">Terms</Link>
