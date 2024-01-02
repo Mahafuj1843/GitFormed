@@ -9,7 +9,7 @@ import xss from'xss-clean'
 import hpp from'hpp'
 
 import authRouter from './routes/authRoute.js'
-// import userRouter from './routes/user.js'
+import repositoryRouter from './routes/repositoryRoute.js'
 // import chatRouter from './routes/chat.js'
 // import messageRouter from './routes/message.js'
 
@@ -28,7 +28,7 @@ app.use(cookieParser())
 app.use(express.json({ limit: '10mb' }))
 
 app.use('/api/auth', authRouter);
-// app.use('/api/user', userRouter);
+app.use('/api/repository', repositoryRouter);
 // app.use('/api/chat', chatRouter);
 // app.use('/api/message', messageRouter);
 
