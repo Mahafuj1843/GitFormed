@@ -5,6 +5,8 @@ const Header = () => {
     const [myMenu, setMyMenu] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
     const [token, setToken] = useState(true);
+    const [notification, setNotification] = useState(0)
+    const [toggle, setToggle] = useState(true)
 
     return (
         <Fragment>
@@ -40,11 +42,36 @@ const Header = () => {
                                         <button type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5  md:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><circle cx="5" cy="6" r="3" /><path d="M5 9v12" /><circle cx="19" cy="18" r="3" /><path d="m15 9-3-3 3-3" /><path d="M12 6h5a2 2 0 0 1 2 2v7" /></svg>
                                         </button>
-                                        <button type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
-                                            <svg className="h-4 w-4 md:h-5  md:w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                                            </svg>
-                                        </button>
+
+                                        <div className='relative'>
+                                            <button onClick={() => setToggle(!toggle)} type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
+                                                <svg className="h-4 w-4 md:h-5  md:w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                                                </svg>
+                                                <span className='w-6 px-0.5 absolute bg-red-600 -top-2 -right-2 inline-block text-white text-sm font-medium text-center rounded-xl'>2</span>
+                                            </button>
+                                            <div className={`absolute ${toggle ? 'block' : 'hidden'} right-0 z-10 mt-2 w-60 md:w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                                {
+                                                    notification ? (
+                                                        <div className="p-1">
+                                                            {/* {
+                                                                notifications.map((n, i) => ( */}
+                                                                        <span /*key={i}*/ className="text-gray-700 block px-2 md:px-4 py-2 text-sm hover:bg-gray-200 cursor-pointer"
+                                                                        >
+                                                                            New pull request in Food_order.
+                                                                        </span>
+                                                                {/* ))
+                                                            }  */}
+                                                            <span /*onClick={() => store.dispatch(emptyNotification())}*/ className="text-gray-700 text-center border-t block px-2 md:px-4 py-2 text-sm md:text-md font-medium cursor-pointer">Mark as read</span>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-1">
+                                                            <span className="text-gray-700 text-center block px-4 py-2 text-md font-medium">No new notification.</span>
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
 
                                         {/* <!-- Profile dropdown --> */}
                                         <div className="relative">
