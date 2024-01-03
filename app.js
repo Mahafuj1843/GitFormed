@@ -10,8 +10,7 @@ import hpp from'hpp'
 
 import authRouter from './routes/authRoute.js'
 import repositoryRouter from './routes/repositoryRoute.js'
-// import chatRouter from './routes/chat.js'
-// import messageRouter from './routes/message.js'
+import pullRouter from './routes/pullRequestRoute.js'
 
 const app = express()
 dotenv.config()
@@ -29,8 +28,7 @@ app.use(express.json({ limit: '10mb' }))
 
 app.use('/api/auth', authRouter);
 app.use('/api/repository', repositoryRouter);
-// app.use('/api/chat', chatRouter);
-// app.use('/api/message', messageRouter);
+app.use('/api/pull', pullRouter);
 
 app.use((err, req, res, next)=>{
     const errorStatus = err.status || 500

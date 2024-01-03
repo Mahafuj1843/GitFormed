@@ -27,6 +27,15 @@ export const createRepository = async (req, res, next) => {
     }
 }
 
+export const singleRepository = async (req, res, next) =>{
+    try {
+        const repo = await Repository.findById(req.params.id, { createdAt: 0, updatedAt: 0 });
+        res.status(200).json(repo)
+    } catch (error) {
+        next(error)
+    }
+}
+
 export const repositoryList = async (req, res, next) => {
     let sort
     if (req.query.sort === 'Alphabetical') sort = { name: 1 }
@@ -54,7 +63,7 @@ export const myRepositoryList = async (req, res, next) => {
     let SearchQuery = { name: searchRgx }
     let match = { owner: mongoose.Types.ObjectId(req.user.id) }
     let project = { watchers: 0, pullRequests: 0, updatedAt: 0 }
-
+    
     let result = await listService(req, Repository, SearchQuery, match, project, sort)
     if (result) res.status(200).json(result)
 }
