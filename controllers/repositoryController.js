@@ -82,6 +82,7 @@ export const createWatcher = async (req, res, next) => {
             result = await Repository.findByIdAndUpdate(repoId,
                 {
                     $pull: { watchers: req.user.id },
+                    $inc: { numberOfWatch: -1 },
                 },
                 { new: true }
             );
@@ -89,6 +90,7 @@ export const createWatcher = async (req, res, next) => {
             result = await Repository.findByIdAndUpdate(repoId,
                 {
                     $push: { watchers: req.user.id },
+                    $inc: { numberOfWatch: 1 }
                 },
                 { new: true }
             );
