@@ -1,12 +1,30 @@
-import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { Fragment, useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom';
+import { LogoutRequest } from '../apiRequests/authRequest';
+import { getToken } from '../helpers/sessionHelper';
+import { MarkAsReadRequest, NotificationListRequest } from '../apiRequests/pullRequest';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+    const { pathname } = useLocation();
     const [myMenu, setMyMenu] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
-    const [token, setToken] = useState(true);
-    const [notification, setNotification] = useState(0)
-    const [toggle, setToggle] = useState(true)
+    const [toggle, setToggle] = useState(false)
+
+    let notifications = useSelector((state) => (state.setting.notifications));
+
+    const onLogout = async () => {
+        const result = await LogoutRequest();
+        if (result) window.location.href = '/'
+    }
+
+    useEffect(() => {
+        if (getToken()) {
+            (async () => {
+                await NotificationListRequest()
+            })()
+        }
+    }, []);
 
     return (
         <Fragment>
@@ -25,16 +43,15 @@ const Header = () => {
                             </div>
                             <div className="hidden sm:ml-6 md:block">
                                 <div className="flex space-x-4">
-                                    {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-                                    <a href="#" className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Home</a>
-                                    <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Team</a>
-                                    <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Projects</a>
-                                    <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Explore</a>
+                                    <Link to="/" className={`${pathname==='/' && "bg-gray-900"} text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page`}>Home</Link>
+                                    <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Team</a>
+                                    <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Projects</a>
+                                    <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Explore</a>
                                 </div>
                             </div>
 
                             {
-                                token ?
+                                getToken() ?
                                     <div className="absolute inset-y-0 right-0 flex items-center gap-1.5 md:gap-3 pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                                         <Link to="/createRepo" type="button" className="relative rounded-md bg-gray-800 p-1 border text-gray-400 hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-5  md:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14" /><path d="M12 5v14" /></svg>
@@ -48,21 +65,24 @@ const Header = () => {
                                                 <svg className="h-4 w-4 md:h-5  md:w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                                                 </svg>
-                                                <span className='w-6 px-0.5 absolute bg-red-600 -top-2 -right-2 inline-block text-white text-sm font-medium text-center rounded-xl'>2</span>
+                                                {
+                                                    notifications?.length > 0 &&
+                                                    <span className='w-6 px-0.5 absolute bg-red-600 -top-2 -right-2 inline-block text-white text-sm font-medium text-center rounded-xl'>{notifications.length}</span>
+                                                }
                                             </button>
                                             <div className={`absolute ${toggle ? 'block' : 'hidden'} right-0 z-10 mt-2 w-60 md:w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                                                 {
-                                                    notification ? (
+                                                    notifications?.length ? (
                                                         <div className="p-1">
-                                                            {/* {
-                                                                notifications.map((n, i) => ( */}
-                                                                        <span /*key={i}*/ className="text-gray-700 block px-2 md:px-4 py-2 text-sm hover:bg-gray-200 cursor-pointer"
-                                                                        >
-                                                                            New pull request in Food_order.
-                                                                        </span>
-                                                                {/* ))
-                                                            }  */}
-                                                            <span /*onClick={() => store.dispatch(emptyNotification())}*/ className="text-gray-700 text-center border-t block px-2 md:px-4 py-2 text-sm md:text-md font-medium cursor-pointer">Mark as read</span>
+                                                            {
+                                                                notifications?.map((n, i) => (
+                                                                    <span key={i} className="w-full inline-flex gap-1 text-gray-800 border-b px-2 md:px-4 py-2 text-sm hover:bg-gray-200 cursor-pointer"
+                                                                    >
+                                                                        New pull request in <h3 className='font-semibold'>{n.repository.name}</h3>.
+                                                                    </span>
+                                                                ))
+                                                            }
+                                                            <span onClick={() => MarkAsReadRequest()} className="text-gray-700 text-center block px-2 md:px-4 py-2 text-sm md:text-md font-medium cursor-pointer">Mark as read</span>
                                                         </div>
                                                     ) : (
                                                         <div className="p-1">
@@ -80,7 +100,6 @@ const Header = () => {
                                             </button>
 
                                             <div onBlur={() => setMyMenu(!myMenu)} className={`${myMenu ? "block" : "hidden"} absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition-all ease-out duration-100`} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                                                {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
                                                 <Link to="/profile" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                                                     Your Profile
@@ -93,21 +112,21 @@ const Header = () => {
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-view"><path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z" /><path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" /><path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" /><path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" /></svg>
                                                     Watching repositories
                                                 </Link>
-                                                <Link to="#" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
+                                                <button onClick={onLogout} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-arrow-left-from-line"><path d="m9 6-6 6 6 6" /><path d="M3 12h14" /><path d="M21 19V5" /></svg>
                                                     Sign out
-                                                </Link>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                     :
                                     <div className="absolute inset-y-0 right-0 flex items-center  gap-2 md:gap-4 text-sm md:text-base pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                                        <a className="relative rounded-md bg-gray-800 p-1 cursor-pointer text-white">
+                                        <Link to="/login" className="relative rounded-md bg-gray-800 p-1 cursor-pointer text-white">
                                             Sign in
-                                        </a>
-                                        <a className="relative rounded-md bg-gray-800 p-1 border cursor-pointer text-white">
+                                        </Link>
+                                        <Link to="/register" className="relative rounded-md bg-gray-800 p-1 border cursor-pointer text-white">
                                             Sign up
-                                        </a>
+                                        </Link>
                                     </div>
                             }
                         </div>
@@ -116,11 +135,10 @@ const Header = () => {
                     {/* <!-- Mobile menu, show/hide based on menu state. --> */}
                     <div className={`${showMenu ? "top-16" : "-top-[300%]"} w-full bg-inherit md:hidden absolute left-0 transition-all duration-300`} id="mobile-menu">
                         <div className="space-y-1 px-2 pb-3 pt-2">
-                            {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-                            <a href="#" className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">Home</a>
-                            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Team</a>
-                            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Projects</a>
-                            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">Explore</a>
+                            <Link to="/" className={`${pathname === '/' && "bg-gray-900"} text-white block rounded-md px-3 py-2 text-base font-medium`} aria-current="page">Home</Link>
+                            <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium`}>Team</a>
+                            <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium`}>Projects</a>
+                            <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium`}>Explore</a>
                         </div>
                     </div>
                 </nav>

@@ -1,8 +1,37 @@
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { ErrorToast, IsEmail, IsEmpty, IsPassword } from '../helpers/formHelper';
+import { LoginRequest } from '../apiRequests/authRequest';
 
 const LoginPage = () => {
     const [show, setShow] = useState(false)
+    const [user, setUser] = useState({
+        email: "",
+        password: "",
+    });
+
+    const handleChange = (e) => {
+        setUser((prev) => {
+            return { ...prev, [e.target.name]: e.target.value };
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (IsEmail(user.email)) {
+            ErrorToast("Invalid email address.")
+        }
+        else {
+            const result = await LoginRequest(user)
+            const intendedRoute = localStorage.getItem("intendedRoute") || "/";
+            setTimeout(() => {
+                if (result) window.location.href = intendedRoute;
+            }, 1500)
+        }
+    }
+
+
     return (
         <Fragment>
             <section className="bg-gray-50">
@@ -10,7 +39,7 @@ const LoginPage = () => {
                     <Link to="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 ">
                         GitFormed
                     </Link>
-                    <div className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
+                    <form onSubmit={handleSubmit} className="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 ">
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
                                 Sign in to your account
@@ -18,7 +47,7 @@ const LoginPage = () => {
                             <div className="space-y-2 md:space-y-4">
                                 <div>
                                     <label for="email" className="block mb-2 text-sm font-medium text-gray-900 ">Email</label>
-                                    <input type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 " placeholder="e.g. name@company.com" required="" />
+                                    <input onChange={handleChange} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 " placeholder="e.g. name@company.com" required="" />
                                 </div>
                                 <div>
                                     <label for="password" className="block mb-2 text-sm font-medium text-gray-900 ">Password</label>
@@ -36,7 +65,7 @@ const LoginPage = () => {
                                                 }
                                             </label>
                                         </div>
-                                        <input type={show ? "text" : "password"} name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 " required="" />
+                                        <input onChange={handleChange} type={show ? "text" : "password"} name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-black focus:border-black block w-full p-2.5 " required="" />
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -50,14 +79,13 @@ const LoginPage = () => {
                                     </div>
                                     <Link to="/forgetPassword" className="text-xs md:text-sm font-medium text-black hover:underline ">Forgot password?</Link>
                                 </div>
-                                <button /*onClick={onLogin}*/ type="submit" className="w-full text-white bg-black hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-black font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign in</button>
+                                <button type="submit" className="w-full text-white bg-black hover:opacity-90 focus:ring-4 focus:outline-none focus:ring-black font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign in</button>
                                 <p className="text-sm font-light text-gray-500 ">
                                     Don’t have an account yet? <Link to="/register" className="font-medium text-black hover:underline ">Sign up</Link>
                                 </p>
-                                <button /*onClick={onLoginGuest}*/ type="submit" className="w-full text-white bg-yellow-500 hover:opacity-80 focus:ring-4 focus:outline-none focus:ring-black font-medium rounded-lg text-sm px-5 py-2.5 text-center ]">Sign in as guest user</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </section>
         </Fragment>

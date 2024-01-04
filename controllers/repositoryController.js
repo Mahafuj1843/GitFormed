@@ -7,10 +7,10 @@ export const createRepository = async (req, res, next) => {
     let repoRegx = /^[A-Za-z0-9-_]{5,10}$/
     try {
         if (!req.body.name || !repoRegx.test(req.body.name))
-            return next(createError(401, "Invalide name or repository name must be 5 to 10 characters."))
+            return next(createError(400, "Invalide name or repository name must be 5 to 10 characters."))
         else {
             const repo = await Repository.findOne({ owner: req.user.id, name: req.body.name })
-            if (repo) return next(createError(400, "The repository name already exists on this account."));
+            if (repo) return next(createError(409, "The repository name already exists on this account."));
             else {
                 const newRepo = new Repository({
                     name: req.body.name,
@@ -29,7 +29,8 @@ export const createRepository = async (req, res, next) => {
 
 export const singleRepository = async (req, res, next) =>{
     try {
-        const repo = await Repository.findById(req.params.id, { createdAt: 0, updatedAt: 0 });
+        let repo = await Repository.findById(req.params.id, { createdAt: 0, updatedAt: 0 });
+
         res.status(200).json(repo)
     } catch (error) {
         next(error)
@@ -46,7 +47,7 @@ export const repositoryList = async (req, res, next) => {
     let searchRgx = { '$regex': req.query.searchKey, $options: 'i' }
     let SearchQuery = { name: searchRgx }
     let match = { visivility: "Public" }
-    let project = { owner: 0, watchers: 0, pullRequests: 0, updatedAt: 0 }
+    let project = { watchers: 0, pullRequests: 0, updatedAt: 0 }
 
     let result = await listService(req, Repository, SearchQuery, match, project, sort)
     if (result) res.status(200).json(result)

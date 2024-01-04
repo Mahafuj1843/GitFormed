@@ -13,13 +13,14 @@ const PullReqListPage = lazy(() => import("./pages/PullReqListPage"));
 const CreatePullReqPage = lazy(() => import("./pages/CreatePullReqPage"));
 import { Toaster } from "react-hot-toast";
 import LazyLoader from "./components/LazyLoader";
+import ScreenLoader from "./components/ScreenLoader";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
 
   return (
     <Fragment>
       <BrowserRouter>
-        <Toaster position="top-center" />
         <Routes>
           <Route
             path="/register"
@@ -49,9 +50,9 @@ function App() {
             path="/myRepo"
             element={
               <Suspense fallback={<LazyLoader />}>
-                {/* <ProtectedRoute path="/myRepo"> */}
+                <ProtectedRoute path="/myRepo">
                   <MyRepoPage />
-                {/* </ProtectedRoute> */}
+                </ProtectedRoute>
               </Suspense>
             }
           />
@@ -59,9 +60,9 @@ function App() {
             path="/myWatchRepo"
             element={
               <Suspense fallback={<LazyLoader />}>
-                {/* <ProtectedRoute path="/myWatchRepo"> */}
+                <ProtectedRoute path="/myWatchRepo">
                   <WatchingRepoPage />
-                {/* </ProtectedRoute> */}
+                </ProtectedRoute>
               </Suspense>
             }
           />
@@ -69,9 +70,9 @@ function App() {
             path="/createRepo"
             element={
               <Suspense fallback={<LazyLoader />}>
-                {/* <ProtectedRoute path="/createRepo"> */}
+                <ProtectedRoute path="/createRepo">
                   <CreateRepoPage />
-                {/* </ProtectedRoute> */}
+                </ProtectedRoute>
               </Suspense>
             }
           />
@@ -87,9 +88,9 @@ function App() {
             path="/profile"
             element={
               <Suspense fallback={<LazyLoader />}>
-                {/* <ProtectedRoute path="/profile"> */}
+                <ProtectedRoute path="/profile">
                   <ProfilePage />
-                {/* </ProtectedRoute> */}
+                </ProtectedRoute>
               </Suspense>
             }
           />
@@ -97,9 +98,7 @@ function App() {
             path="/repository/:id/pull"
             element={
               <Suspense fallback={<LazyLoader />}>
-                {/* <ProtectedRoute path="/createRepo"> */}
                   <PullReqListPage />
-                {/* </ProtectedRoute> */}
               </Suspense>
             }
           />
@@ -107,12 +106,16 @@ function App() {
             path="/repository/:id/createPullReq"
             element={
               <Suspense fallback={<LazyLoader />}>
+                <ProtectedRoute path="/repository/:id/createPullReq">
                   <CreatePullReqPage />
+                </ProtectedRoute>
               </Suspense>
             }
           />
         </Routes>
       </BrowserRouter>
+      <ScreenLoader />
+      <Toaster position="top-center" />
     </Fragment>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import AppWrapper from '../components/AppWrapper'
+import { getUserDetails } from '../helpers/sessionHelper'
 
 const ProfilePage = () => {
   return (
@@ -23,9 +24,9 @@ const ProfilePage = () => {
           </div>
           <div className="mt-4">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              Danish Heilium
+              {getUserDetails().username}
             </h3>
-            <p className="font-medium">Ui/Ux Designer</p>
+            <p className="font-medium">{getUserDetails().email}</p>
             <div className="mx-auto my-4 grid w-full sm:w-94 grid-cols-2 sm:grid-cols-4 gap-y-2 rounded-md border border-stroke py-2.5 shadow-2 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">
                 <span className="font-semibold text-black dark:text-white">

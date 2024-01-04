@@ -10,6 +10,7 @@ export const listService = async (Req, Model, SearchQuery, match, project, sort)
             data = await Model.aggregate([
                 { $match: { $and: [match] } },
                 { $project: project },
+		{ $lookup: { from: 'users', localField: 'owner', foreignField: '_id', as: 'Owner' } },
                 {
                     $facet: {
                         Total: [{ $match: SearchQuery }, { $count: 'total' }],
@@ -21,6 +22,7 @@ export const listService = async (Req, Model, SearchQuery, match, project, sort)
             data = await Model.aggregate([
                 { $match: { $and: [match] } },
                 { $project: project },
+		{ $lookup: { from: 'users', localField: 'owner', foreignField: '_id', as: 'Owner' } },
                 {
                     $facet: {
                         Total: [{ $count: 'total' }],
