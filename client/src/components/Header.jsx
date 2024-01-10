@@ -1,11 +1,15 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom';
 import { LogoutRequest } from '../apiRequests/authRequest';
 import { getToken } from '../helpers/sessionHelper';
 import { MarkAsReadRequest, NotificationListRequest } from '../apiRequests/pullRequest';
-import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';;
+import { setNotification } from '../store/state/settingSlice';
+import store from '../store/store';
+import { socket } from '../App';
 
 const Header = () => {
+    const renderRun = useRef(false)
     const { pathname } = useLocation();
     const [myMenu, setMyMenu] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
@@ -26,6 +30,15 @@ const Header = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (renderRun.current === false) {
+            socket.on("pull recieved", (newPullRecieved) => {
+                NotificationListRequest()
+            })
+            return () => { renderRun.current = true }
+        }
+    }, [])
+
     return (
         <Fragment>
             <div className='w-full fixed top-0 left-0'>
@@ -43,7 +56,7 @@ const Header = () => {
                             </div>
                             <div className="hidden sm:ml-6 md:block">
                                 <div className="flex space-x-4">
-                                    <Link to="/" className={`${pathname==='/' && "bg-gray-900"} text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page`}>Home</Link>
+                                    <Link to="/" className={`${pathname === '/' && "bg-gray-900"} text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page`}>Home</Link>
                                     <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Team</a>
                                     <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Projects</a>
                                     <a href="#" className={`text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium`}>Explore</a>

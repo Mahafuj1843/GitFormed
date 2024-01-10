@@ -16,7 +16,7 @@ export const createPullRequest = async (req, res, next) => {
             })
 
             if (repo) {
-                const newPull = new PullRequest({
+                var newPull = new PullRequest({
                     title: req.body.title,
                     comment: req.body.comment,
                     repository: req.params.id
@@ -31,7 +31,12 @@ export const createPullRequest = async (req, res, next) => {
                 }
 
                 await newPull.save();
-                res.status(201).send("Pull request has been create successfull.")
+
+                newPull = await Repository.populate(newPull, {
+                    path: "repository",
+                    select: "name watchers",
+                });
+                res.status(201).json(newPull)
             } else {
                 return next(createError(500, "Something went wrong."))
             }
@@ -65,7 +70,7 @@ export const myNotificationList = async (req, res, next) => {
         let result = await Notification.find(
             { users: { $elemMatch: { $eq: mongoose.Types.ObjectId(req.user.id) } } },
             { updatedAt: 0 }
-        ).populate("repository", "-desc -visivility -watchers -numberOfWatch -createdAt -updatedAt");
+        ).populate("repository", "-desc -visivility -numberOfWatch -createdAt -updatedAt");
 
         result = await User.populate(result, {
             path: "repository.owner",

@@ -1,4 +1,4 @@
-import { Fragment, Suspense, lazy } from "react";
+import { Fragment, Suspense, lazy, useEffect } from "react";
 import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 const RegistrationPage = lazy(() => import("./pages/RegistrationPage"));
@@ -15,8 +15,19 @@ import { Toaster } from "react-hot-toast";
 import LazyLoader from "./components/LazyLoader";
 import ScreenLoader from "./components/ScreenLoader";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { getToken, getUserDetails } from "./helpers/sessionHelper";
+import io from "socket.io-client"
+
+const ENDPOINT = "http://localhost:8081"
+export var socket
 
 function App() {
+  useEffect(()=>{
+    socket = io(ENDPOINT)
+    if(getToken()){
+      socket.emit("setup", getUserDetails())
+    }
+  }, [])
 
   return (
     <Fragment>

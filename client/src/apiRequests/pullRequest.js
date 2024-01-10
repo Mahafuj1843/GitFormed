@@ -4,6 +4,7 @@ import { hideLoader, setNotification, showLoader } from "../store/state/settingS
 import { ErrorToast, SuccessToast } from "../helpers/formHelper";
 import { getToken  } from "../helpers/sessionHelper";
 import { setPullRequest } from "../store/state/pullReqSlice";
+import { socket } from "../App";
 const BaseURL = "http://localhost:8081/api"
 const AxiosHeader = { headers: { "token": getToken() } }
 
@@ -14,6 +15,9 @@ export const CreatePullRequest = (pull, repoId) =>{
         store.dispatch(hideLoader())
         if (res.status === 201) {
             SuccessToast("Pull request has been created.")
+
+            socket.emit("new pull", res.data)
+
             return true;
         } else {
             ErrorToast("Something Went Wrong")
