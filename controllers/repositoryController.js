@@ -56,9 +56,8 @@ export const repositoryList = async (req, res, next) => {
 export const myRepositoryList = async (req, res, next) => {
     let sort
     if (req.query.sort === 'Alphabetical') sort = { name: 1 }
-    else if (req.query.sort === 'Latest') sort = { createdAt: -1 }
     else if (req.query.sort === 'Watchers') sort = { numberOfWatch: -1 }
-    else sort = { createdAt: 1 }
+    else sort = { createdAt: -1 }
 
     let searchRgx = { '$regex': req.query.searchKey, $options: 'i' }
     let SearchQuery = { name: searchRgx }
@@ -106,9 +105,8 @@ export const createWatcher = async (req, res, next) => {
 export const myWatchingRepositoryList = async (req, res, next) => {
     let sort
     if (req.query.sort === 'Alphabetical') sort = { name: 1 }
-    else if (req.query.sort === 'Latest') sort = { createdAt: -1 }
     else if (req.query.sort === 'Watchers') sort = { numberOfWatch: -1 }
-    else sort = { createdAt: 1 }
+    else sort = { createdAt: -1 }
 
     let searchRgx = { '$regex': req.query.searchKey, $options: 'i' }
     let SearchQuery = { name: searchRgx }

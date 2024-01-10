@@ -45,9 +45,8 @@ const WatchingRepoPage = () => {
                         </div>
                         <div className='flex gap-3 w-full md:justify-end mb-5'>
                             <select onChange={(e) => setSort(e.target.value)} id="lsit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg ring-gray-300 block outline-gray-300  px-2.5 py-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-600 dark:focus:border-gray-600">
-                                <option selected value=""> Sort </option>
+                                <option selected value=''>Latest</option>
                                 <option value='Alphabetical'>Alphabetical</option>
-                                <option value='Latest'>Latest</option>
                                 <option value='Watchers'>Watcher</option>
                             </select>
                             <Link to="/createRepo" class="inline-flex items-center gap-2 py-2 px-3 ml-2 text-sm font-medium text-white bg-[#1c6823] rounded-lg border border-[#1c6823] hover:opacity-90 focus:ring-4 focus:outline-none  dark:bg-gray-300 dark:hover:bg-gray-400 dark:focus:ring-gray-300">
